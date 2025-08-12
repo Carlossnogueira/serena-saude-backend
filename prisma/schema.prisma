@@ -30,18 +30,74 @@ enum Role {
 }
 
 model Users {
-  id Int @id @default(autoincrement())
-  email String @unique
+  id           Int          @id @default(autoincrement())
+  email        String       @unique
   passwordHash String
-  name String
-  birthDate DateTime?
-  gender Gender?
-  phone String  
-  address String
-  documentId String @unique
+  name         String
+  birthDate    DateTime?
+  gender       Gender?
+  phone        String
+  address      String
+  documentId   String       @unique
   documentType DocumentType
-  role Role
-  specialty String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime 
+  role         Role
+  specialty    String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime
+
+  patientAppointments Appointments[] @relation(name: "PatientAppointments")
+  doctorAppointments  Appointments[] @relation(name: "DoctorAppointments")
+
+  profileChangeRequests ProfileChangeRequets[] @relation(name: "UserProfileChangeRequests")
+  profileChangeReviewedBy ProfileChangeRequets[] @relation(name: "ProfileChangeReviewedBy")
+}
+
+enum Status {
+  SCHEDULED
+  COMPLETED
+  CANCELED
+  RESCHEDULED
+}
+
+model Appointments {
+  id             Int      @id @default(autoincrement())
+  patientId      Int
+  professionalId Int
+  date           DateTime
+  time           String
+  status         Status
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime
+
+  patient Users @relation(name: "PatientAppointments", fields: [patientId], references: [id])
+  doctor  Users @relation(name: "DoctorAppointments", fields: [professionalId], references: [id])
+}
+
+enum FieldName {
+  EMAIL
+  PASSWORD
+  NAME
+  BIRTH_DATE
+}
+
+enum ProfileChangeStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model ProfileChangeRequets{
+  id Int @id @default(autoincrement())
+  userId Int
+  fieldName FieldName
+  oldValue String
+  newValue String
+  status ProfileChangeStatus @default(PENDING)
+  requestedAt DateTime @default(now())
+  reviewedAt DateTime?
+  reviewedBy Int?
+
+  reviewedByUser Users? @relation(name: "ProfileChangeReviewedBy", fields: [reviewedBy], references: [id])
+  user Users @relation(name: "UserProfileChangeRequests", fields: [userId], references: [id])
 }
