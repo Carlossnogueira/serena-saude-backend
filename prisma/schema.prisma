@@ -29,6 +29,15 @@ enum Role {
   PATIENT
 }
 
+// can be expanded 
+enum Specialty {
+  DENTIST
+  PEDIATRICIAN
+  PSYCHIATRIST
+  OPHTHALMOLOGIST
+  DERMATOLOGIST
+}
+
 model Users {
   id           Int          @id @default(autoincrement())
   email        String       @unique
@@ -39,17 +48,17 @@ model Users {
   phone        String
   address      String
   documentId   String       @unique
-  documentType DocumentType
-  role         Role
+  documentType DocumentType @default(CPF)
+  role         Role         @default(PATIENT)
   specialty    String?
   createdAt    DateTime     @default(now())
-  updatedAt    DateTime
-  isVerified   Boolean
+  updatedAt    DateTime?
+  isVerified   Boolean      @default(false)
 
   patientAppointments Appointments[] @relation(name: "PatientAppointments")
   doctorAppointments  Appointments[] @relation(name: "DoctorAppointments")
 
-  profileChangeRequests ProfileChangeRequets[] @relation(name: "UserProfileChangeRequests")
+  profileChangeRequests   ProfileChangeRequets[] @relation(name: "UserProfileChangeRequests")
   profileChangeReviewedBy ProfileChangeRequets[] @relation(name: "ProfileChangeReviewedBy")
 }
 
@@ -88,17 +97,17 @@ enum ProfileChangeStatus {
   REJECTED
 }
 
-model ProfileChangeRequets{
-  id Int @id @default(autoincrement())
-  userId Int
-  fieldName FieldName
-  oldValue String
-  newValue String
-  status ProfileChangeStatus @default(PENDING)
-  requestedAt DateTime @default(now())
-  reviewedAt DateTime?
-  reviewedBy Int?
+model ProfileChangeRequets {
+  id          Int                 @id @default(autoincrement())
+  userId      Int
+  fieldName   FieldName
+  oldValue    String
+  newValue    String
+  status      ProfileChangeStatus @default(PENDING)
+  requestedAt DateTime            @default(now())
+  reviewedAt  DateTime?
+  reviewedBy  Int?
 
   reviewedByUser Users? @relation(name: "ProfileChangeReviewedBy", fields: [reviewedBy], references: [id])
-  user Users @relation(name: "UserProfileChangeRequests", fields: [userId], references: [id])
+  user           Users  @relation(name: "UserProfileChangeRequests", fields: [userId], references: [id])
 }
