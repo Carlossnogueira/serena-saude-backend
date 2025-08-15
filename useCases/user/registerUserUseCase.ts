@@ -1,5 +1,6 @@
 import { PrismaUserReposity } from "../../src/repositories/userRepository.js";
 import type { userRegisterSchema } from "../../src/schemas/user/userRegisterSchema.js";
+import { EncryptPasswordService } from "../../src/service/EncryptPasswordService.js";
 
 export async function registerUserUseCase({
   email,
@@ -13,10 +14,11 @@ export async function registerUserUseCase({
 }: userRegisterSchema) {
 
     const userRepository = new PrismaUserReposity();
+    const encryptService = new EncryptPasswordService();
 
     const user = {
         email,
-        passwordHash: password,
+        passwordHash: await encryptService.generateHash(password),
         name,
         birthDate: birthdate,
         gender,
@@ -31,7 +33,7 @@ export async function registerUserUseCase({
 
         return false;
     } catch (error) {
-        console.log("🔴 Error when create an user!")
+        console.log("🔴 Error on: RegisterUserUseCase.")
         return false;
     }
 
