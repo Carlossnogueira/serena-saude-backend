@@ -6,6 +6,11 @@ const envSchema = z.object({
   DATABASE_URL: z.string(),
   NODE_ENV: z.enum(["development", "production"]).default("development"),
   SECRET_KEY: z.string(),
+
+  SMTP_HOST: z.string(),
+  SMTP_PORT: z.coerce.number().default(587),
+  SMTP_USER: z.string(),
+  SMTP_PASS: z.string(),
 });
 
 const _env = envSchema.safeParse(process.env);

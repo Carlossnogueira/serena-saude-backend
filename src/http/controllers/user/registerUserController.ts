@@ -1,6 +1,7 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { userRegisterSchema } from "../../../schemas/user/userRegisterSchema.js";
 import { registerUserUseCase } from "../../../../useCases/user/registerUserUseCase.js";
+import { EmailService } from "../../../service/emailService.js";
 
 export async function registerUserController(
   request: FastifyRequest,
@@ -30,6 +31,16 @@ export async function registerUserController(
     });
 
     if(!result){
+
+      const emailService = new EmailService()
+      try { 
+        // TODO validation code:
+        await emailService.sendVerificationEmail(email, "24852")
+      } catch (error) {
+        console.log("🔴 Error to send email in RegisterUserController" + error)
+      }
+      
+
       return reply.status(201).send({message: "Usuário criado com sucesso! Verifique seu email para ativar sua conta!"})
     }
 

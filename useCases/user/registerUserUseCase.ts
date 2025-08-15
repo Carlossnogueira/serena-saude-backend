@@ -1,6 +1,6 @@
 import { PrismaUserReposity } from "../../src/repositories/userRepository.js";
 import type { userRegisterSchema } from "../../src/schemas/user/userRegisterSchema.js";
-import { EncryptPasswordService } from "../../src/service/EncryptPasswordService.js";
+import { EncryptPasswordService } from "../../src/service/EncryptService.js";
 
 export async function registerUserUseCase({
   email,
@@ -27,10 +27,10 @@ export async function registerUserUseCase({
         documentId
     }
 
+    //TODO validation if documentId your phone, and password is used
     try {
         const result = userRepository.create(user)
         if (!result) return true;
-
         return false;
     } catch (error) {
         console.log("🔴 Error on: RegisterUserUseCase.")
