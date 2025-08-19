@@ -27,7 +27,7 @@ export async function registerUserUseCase({
         documentId
     }
 
-    //TODO validation if documentId your phone, and password is used
+    // FIXME  validation if documentId your phone, and password is used
     try {
         const result = userRepository.create(user)
         if (!result) return true;

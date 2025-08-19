@@ -1,5 +1,5 @@
 import { prisma } from '../lib/prisma.js'
-import { Prisma } from '../../prisma/generated/prisma/client.js'
+import { Prisma } from '../../node_modules/@prisma/client/index.js'
 
 export class PrismaUserReposity{
     async create(data: Prisma.UsersCreateInput){

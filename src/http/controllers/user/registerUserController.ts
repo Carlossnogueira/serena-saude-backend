@@ -1,7 +1,7 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { userRegisterSchema } from "../../../schemas/user/userRegisterSchema.js";
 import { registerUserUseCase } from "../../../../useCases/user/registerUserUseCase.js";
-import { EmailService } from "../../../service/emailService.js";
+import  EmailService  from "../../../service/EmailService.js";
 
 export async function registerUserController(
   request: FastifyRequest,

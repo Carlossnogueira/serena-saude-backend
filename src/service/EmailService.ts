@@ -1,13 +1,15 @@
 import nodemailer from "nodemailer";
 import { env } from "../lib/envconfig.js";
 
-interface EmailOptions {
-  to: string;
-  subject: string;
-  html: string;
-}
+/*
+  interface EmailOptions {
+    to: string;
+    subject: string;
+    html: string;
+  }
+*/
 
-export class EmailService {
+ class EmailService {
   private transporter;
 
   constructor() {
@@ -105,3 +107,5 @@ export class EmailService {
     }
   }
 }
+
+export default  EmailService 
