@@ -1,9 +1,11 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { userRegisterSchema } from "../../../schemas/user/userRegisterSchema.js";
-import { registerUserUseCase } from "../../../../useCases/user/registerUserUseCase.js";
+import { RegisterUserUseCase } from "../../../../useCases/user/registerUserUseCase.js";
 import  EmailService  from "../../../service/EmailService.js";
+import { PrismaUserReposity } from "../../../repositories/Prisma/prismaUserRepository.js";
 
-export async function registerUserController(
+export async function 
+registerUserController(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
@@ -19,7 +21,11 @@ export async function registerUserController(
       documentId,
     } = userRegisterSchema.parse(request.body);
 
-    const result = await registerUserUseCase({
+    const prisma = new PrismaUserReposity()
+
+    const useCase = new RegisterUserUseCase(prisma);
+
+    const result = await useCase.Execute({
       email,
       password,
       name,
@@ -28,7 +34,7 @@ export async function registerUserController(
       phone,
       address,
       documentId,
-    });
+    })
 
     if(!result){
 
